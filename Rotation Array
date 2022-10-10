@@ -1,0 +1,65 @@
+方法一：
+#include <stdio.h>
+void left_move(char* arr, int k)
+{
+	int i = 0;
+	int j = 0;
+	int sz = strlen(arr);
+	for (j = 0; j < k; j++)//此处不能用i，因为下面一层for循环也是用i，循环完成之后i等于6，此时再+1等于7，而7>k，条件不成立，不进行第二次循环。
+		                   //此处的for循环是将k个元素旋转到右边，进行一次转移一个
+	{
+		int ret = *arr;
+		for (i = 0; i < sz - 1; i++)//此处的for循环是将除了首元素之外的每个元素往前移动一位
+		{			
+
+			arr[i] = arr[i + 1];
+		}
+		//int ret = *arr;//如果将该式子放在此处，经过上面for循环后，数组变成了bcdeff,此时再将b赋给了f，变成了bcdefb
+		arr[sz - 1] = ret;
+
+	}
+}
+int main()
+{
+	char arr1[] = "abcdef";
+	int k = 0;
+	scanf_s("%d", &k);
+	left_move(arr1, k);
+	printf("%s", arr1);
+
+	return 0;
+}                    此方法是取出第一个元素，将其他元素依次前移一位，再将第一个元素放在最后进行旋转的
+ 
+ 
+ 
+ 
+ 方法二：
+ #include <stdio.h>
+void reverse(char* left,char* right)
+{
+	while (left < right)
+	{
+		int ret1 = *left;
+		*left = *right;
+		*right = ret1;
+		left++;
+		right--;
+	}
+}
+void left_move(char* arr, int k)
+{
+	int sz = strlen(arr);
+	reverse(arr, arr+k-1);//逆序前面k个元素
+	reverse(arr + k,arr+sz-1);//逆序剩下的元素
+	reverse(arr,arr+sz-1);//逆序整个字符串
+}
+int main()
+{
+	char arr[] = "abcdef";
+	int k = 0;
+	scanf_s("%d", &k);
+	left_move(arr, k);
+	printf("%s", arr);
+
+	return 0;
+}                      此方法是三步翻转法，分别逆序旋转部分和不旋转的部分，再逆序整个字符串得到旋转后的字符串
