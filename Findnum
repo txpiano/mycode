@@ -1,0 +1,43 @@
+int Findnum(int arr[3][3], int k,int* px,int* py)
+{
+	int x = 0;
+	int y = 2;
+	while (x <= 2 && y >= 0)
+	{
+		if (k > arr[x][y])//将k与右上角元素进行比较，如果k大，则去掉右上角元素所在行
+		{
+			x++;
+		}
+		else if (k < arr[x][y])//将k与右上角元素进行比较，如果k小，则去掉右上角元素所在列
+		{
+			y--;
+		}
+		else if (k == arr[x][y])
+		{
+			*px = x;//将形参x传给实参x
+			*py = y;//将形参y传给实参y
+			return 1;
+		}
+	}
+	return 0;
+}
+int main()
+{
+	int arr[3][3] = { {1,2,3},{4,5,6},{7,8,9} };
+	int k = 0;
+	int x = 3;
+	int y = 3;
+	scanf_s("%d", &k);
+	int ret = Findnum(arr,k, &x, &y);//将x，y的地址传入函数，当函数内的形参改变后，就能通过地址来改变实参
+	if (ret == 0)
+	{
+		printf("没找到");
+	}
+	else if (ret == 1)
+	{
+		printf("找到了");
+		printf("下标是：x=%d  y=%d",x,y);
+	}
+
+	return 0;
+}
