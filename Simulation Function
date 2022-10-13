@@ -1,0 +1,69 @@
+int my_strlen(char* p)
+{
+	int count = 0;
+	while (*p !='\0')
+	{
+		count++;
+		p++;
+	}
+	return count;
+}
+int main()
+{
+	char arr[] = "abcdefg";
+	int len=my_strlen(arr);
+	printf("%d", len);
+	return 0;
+}
+
+
+
+
+char* my_strcpy(char* dest,const char* src)//strcpy的函数返回类型就是目的地地址
+{
+	assert(dest);//加上断言，防止目的地地址和源字符串地址是是空指针
+	assert(src);
+	char* ret = dest;
+	while (*dest++ = *src++)//既能替换'\0'，同时跳出循环
+	{
+		;
+	}
+	return ret;
+}
+int main()
+{
+	char arr1[] = "abcdef";
+	char arr2[] = "bit";
+	my_strcpy(arr1, arr2);
+	printf("%s", arr1);
+	return 0;
+
+}
+
+
+
+
+
+char* my_strcat(char* dest, char* src)
+{
+	assert(dest && src);
+	char* ret = dest;
+	while (*dest != '\0')//找到目的地的'\0'
+	{
+		dest++;
+	}
+	while (*dest++ = *src++)//替换字符串，并且把'\0'也替换过去，终止替换
+	{
+		;
+	}
+	return ret;//返回目的地的地址
+}
+int main()
+{
+	char arr1[10] = "abcdef";//此处必须要设置arr1的数组大小，使得追加字符串后arr1能容纳下
+	char arr2[] = "bit";
+	//strcat(arr1, arr2);
+	my_strcat(arr1, arr2);
+	printf("%s", arr1);
+	return 0;
+}
