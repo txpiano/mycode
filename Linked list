@@ -1,0 +1,47 @@
+struct S
+{
+	int date;
+	struct S* next;
+};
+
+void pushfront(struct S** p, int x)
+{
+	struct S* new = (struct S*)malloc(sizeof(struct S));
+	new->date = x;
+	new->next = *p;
+
+	*p = new;
+
+}
+void pushback(struct S** p, int x)
+{
+	struct S* new = (struct S*)malloc(sizeof(struct S));
+	new->date = x;
+	new->next = NULL;
+
+
+	if (*p == NULL)
+	{
+		*p = new;
+	}
+
+	else
+	{
+		struct S* tail = *p;
+		while (tail->next != NULL)
+		{
+			tail = tail->next;
+		}
+		tail->next = new;
+	}
+}
+int main()
+{
+	struct S* p = NULL;
+	pushback(&p, 1);
+	pushback(&p, 2);
+	pushback(&p, 3);
+	pushback(&p, 4);
+	pushfront(&p, 5);
+	return 0;
+}
