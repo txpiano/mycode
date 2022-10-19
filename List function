@@ -1,0 +1,207 @@
+  struct List
+{
+	int date;
+	struct List* next;
+};
+void Listpushback(struct List** sl, int x)
+{
+	struct List* newcode = (struct List*)malloc(sizeof(struct List));
+	newcode->date = x;
+	newcode->next = NULL;
+	if (*sl == NULL)
+	{
+		*sl = newcode;
+	}
+
+
+	else
+	{
+		struct List* tail = *sl;
+		while (tail->next != NULL)
+		{
+			tail = tail->next;
+		}
+		tail->next = newcode;
+	}
+
+
+}
+void printList(struct List* sl)
+{
+	struct List* tail = sl;
+	while (tail)
+	{
+		printf("%d\n", tail->date);
+		tail = tail->next;
+	}
+	
+}
+void Listpushfront(struct List** sl, int x)
+{
+	struct List* newcode = (struct List*)malloc(sizeof(struct List));
+	newcode->date = x;
+	newcode->next = *sl;
+	*sl = newcode;
+}
+
+
+void Listbackdel(struct List** sl)
+{
+	assert(*sl);
+	if ((*sl)->next == NULL)
+	{
+		free(*sl);
+		*sl = NULL;
+	}
+	else
+	{
+		struct List* tail1 = *sl;
+		struct List* tail2 = *sl;
+		while (tail1->next != NULL)
+		{
+			tail2 = tail1;
+			tail1 = tail1->next;
+		}
+		tail2->next = NULL;
+		free(tail1);
+		tail1 = NULL;
+	}
+}
+void Listfrontdel(struct List** sl)
+{
+	assert(*sl);
+	struct List* ret = *sl;
+	*sl = (*sl)->next;
+	free(ret);
+	ret = NULL;
+}
+void Listposinsert(struct List** sl, int x,int y)
+{
+	struct List* tail = *sl;
+	while (tail)
+	{
+		if (tail->date == x)
+		{
+			struct List* newcode = (struct List*)malloc(sizeof(struct List));
+			newcode->next = NULL;
+			newcode->date = y;
+			if (tail->next == NULL)
+			{
+				tail->next = newcode;
+				break;
+			}
+			else
+			{
+				newcode->next = tail->next;
+				tail->next = newcode;
+				break;
+			}
+
+		}
+		else
+		{
+			tail = tail->next;
+		}
+	}
+
+
+
+
+}
+void Listposfinsert(struct List** sl, int x, int y)
+{
+	assert(*sl);
+	struct List* tail = *sl;
+	struct List* tail0 = *sl;
+	tail = *sl;
+	tail0 = *sl;
+	while (tail->date != x)
+	{
+		tail0 = tail;
+		tail = tail->next;
+	}
+
+	struct List* newcode = (struct List*)malloc(sizeof(struct List));
+	newcode->date = y;
+	newcode->next = NULL;
+
+	if (tail == *sl)
+	{
+		newcode->next = tail;
+		*sl = newcode;
+	}
+	else
+	{
+		newcode->next = tail;
+		tail0->next = newcode;
+	}
+
+
+
+
+}
+void Listfinddel(struct List** sl, int x)
+{
+	assert(*sl);
+	struct List* tail = *sl;
+	struct List* tail0 = *sl;
+	while (tail->date != x)
+	{
+		tail0 = tail;
+		tail = tail->next;
+	}
+	if (tail == *sl)
+	{
+		*sl = tail->next;
+		free(tail);
+		tail = NULL;
+	}
+	else
+	{
+		tail0->next = tail->next;
+		free(tail);
+		tail = NULL;
+	}
+
+}
+int main()
+{
+	struct List* SL = NULL;//这里也能创建一个结构体变量，但问题在于既然是结构体变量就要初始化，因为调用尾插函数的真正目的是为了能在第一个位置插入数据和下一个数据的地址
+	Listpushback(&SL, 1);//那么此时创建一个结构体变量后就要将1和NULL赋给结构体变量，
+	Listpushback(&SL, 2);
+	Listpushback(&SL, 3);
+	//Listbackdel(&SL);
+	//Listbackdel(&SL);
+	//Listbackdel(&SL);
+	//printList(SL);
+	//Listpushfront(&SL, 1);
+	//Listpushfront(&SL, 2);
+	//Listpushfront(&SL, 3);
+	
+	//Listfrontdel(&SL);
+	//Listfrontdel(&SL);
+	//Listfrontdel(&SL);
+	//Listfrontdel(&SL);
+	//Listfrontdel(&SL);
+	//Listfrontdel(&SL);
+	Listfinddel(&SL, 3);
+	Listfinddel(&SL, 2);
+	Listfinddel(&SL, 1);
+
+
+	//printList(SL);
+	//Listfrontdel(&SL, 3);
+	//Listfrontdel(&SL, 3);
+
+	//Listposinsert(&SL,3,5);
+	//Listposinsert(&SL, 3, 3);
+	//Listposinsert(&SL, 3, 5);
+	//Listposinsert(&SL, 5, 3);
+	//Listposfinsert(&SL, 1, 5);
+
+	printList(SL);
+
+
+	//printList(SL);
+	return 0;
+}
