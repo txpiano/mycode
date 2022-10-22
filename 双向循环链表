@@ -1,0 +1,121 @@
+typedef struct doublelist         双向循环链表的头尾插 头尾删 查删 插入
+{
+    int data;
+    struct doublelist* next;
+    struct doublelist* perv;
+}doublelist;
+
+void initdoublelist(doublelist* dl)
+{
+    dl->next = dl;
+    dl->perv = dl;
+    dl->data = 0;
+}
+void addnode(doublelist* dl,int x)
+{
+    doublelist* newnode = (doublelist*)malloc(sizeof(doublelist));
+    newnode->data = x;
+    
+    dl->perv->next = newnode;
+    newnode->perv = dl->perv;
+    newnode->next = dl;
+    dl->perv = newnode;
+    
+}
+void delback(doublelist* dl)
+{
+    doublelist* memery = dl->perv;  
+    dl->perv = dl->perv->perv;
+    dl->perv->next = dl;
+    free(memery);
+    memery = NULL;
+}
+void delhead(doublelist* dl)
+{
+    assert(dl);
+    assert(dl->next != dl);
+    doublelist* memery = dl-> next;
+    dl->next = dl->next->next;
+    dl->next->perv = dl;
+    free(memery);
+    memery = NULL;
+}
+void pushhead(doublelist* dl,int x)
+{
+    doublelist* newnode = (doublelist*)malloc(sizeof(doublelist));
+    newnode->data = x;
+    doublelist* next = dl->next;
+    dl->next = newnode;
+    next->perv = newnode;
+    newnode->next = next;
+    newnode->perv = dl;
+}
+doublelist* find(doublelist* dl, int x)
+{
+    doublelist* cur = dl->next;
+    while (cur != dl)
+    {
+        if (cur->data != x)
+        {
+            cur = cur->next;
+        }
+        else
+        {
+            return cur;
+        }
+    }
+}
+void finddel(doublelist* dl, int x)
+{
+    doublelist* pos=find(dl, x);
+    doublelist* next = pos->next;
+    doublelist* perv = pos->perv;
+
+    perv->next = next;
+    next->perv = perv;
+    free(pos);
+    pos = NULL;
+}
+void findadd(doublelist* dl, int x)
+{
+    doublelist* pos = find(dl, x);
+    doublelist* newnode = (doublelist*)malloc(sizeof(doublelist));
+    newnode->data = x;
+
+
+    doublelist* perv = pos->perv;
+    perv->next = newnode;
+    newnode->next = pos;
+    pos->perv = newnode;
+    newnode->perv = perv;
+
+
+}
+int main()
+{
+    doublelist dl;
+    initdoublelist(&dl);
+    addnode(&dl,1);
+    addnode(&dl, 2);
+    addnode(&dl, 3);
+    addnode(&dl, 4);
+    
+  //  delback(&dl);
+   // delback(&dl);
+   //delback(&dl);
+  //  delback(&dl);
+
+   //delback(&dl);
+    //delback(&dl);
+    //delhead(&dl);
+    /*pushhead(&dl,1);
+    pushhead(&dl, 2);
+    pushhead(&dl, 3);
+    pushhead(&dl, 4);*/
+   // finddel(&dl, 3);
+    findadd(&dl, 3);//这个函数是在找到的位置之前进行插入新节点，如果这个地址是哨兵位那就是尾插，
+                    //如果是哨兵位的下一位那就是头插,所以头插尾插都可以调用findadd函数，只要传哨兵位或其下一位的地址
+                    //同理，给finddel传入哨兵位或其下一位的地址，就可进行头删或者尾删操作。
+
+    return 0;
+}
