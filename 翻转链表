@@ -1,0 +1,89 @@
+翻转链表          三个指针来改变链表的方向，n1是用来记录翻转后下一步的地址，而n3只是记录n2的下一个位置，好让n2继续往下一个
+                 节点移动，不然当n2->next=n1后，那么此时n2的下一个节点就找不到了
+if (head == NULL)
+{
+	return 0;
+}
+struct ListNode* n1 = NULL;
+struct ListNode* n2 = head;
+struct ListNode* n3 = head->next;
+while (n2)
+{
+	n2->next = n1;
+
+	n1 = n2;
+	n2 = n3;
+	if (n3 == NULL)
+	{
+		break;
+	}
+	n3 = n3->next;
+}
+return n1;
+
+
+//              还是翻转链表，但是是通过将原来的链表头插在一个空指针前面形成的一个新的链表从而实现了链表的翻转
+	struct ListNode {
+			int val;
+			struct ListNode* next;
+		};
+	void fanzhuan(struct ListNode* head)
+	{
+		struct ListNode* new = NULL;
+		struct ListNode* cur = head;
+		struct ListNode* next = cur->next;
+
+		while (cur)
+		{
+			cur->next = new;
+			new = cur;
+			cur = next;
+			if (next == NULL)//如果要避免这个if判断，可以在while循环中创建next变量，
+							//那么即使next是空指针，后面也不会涉及到next的解除引用操作；
+			{
+				break;
+			}
+			next = cur->next;
+		}
+	}
+	struct ListNode* zhongjian(struct ListNode* head)//返回的是中间的节点
+		           //最好理解的方式：一个人跑得是另一个人的二倍快，那快的人到达了终点，慢的人就在中点
+	{
+		struct ListNode* slow = head;
+		struct ListNode* fast = head;
+
+		while (fast)
+		{
+			fast = fast->next->next;
+			slow = slow->next;
+		}
+		return slow；
+	}
+
+int main()
+{
+	struct ListNode* n1 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n2 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n3 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n4 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n5 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n6 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	n1->val = 1;
+	n1->next = n2;
+	n2->val = 2;
+	n2->next = n3;
+	n3->val = 3;
+	n3->next = n4;
+	n4->val = 4;
+	n4->next = n5;
+	n5->val = 5;
+	n5->next = n6;
+	n6->val = 6;
+	n6->next = NULL;
+
+	fanzhuan(n1);
+
+	zhongjian(n1);
+	
+	return 0;
+}
