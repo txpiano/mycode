@@ -1,0 +1,212 @@
+typedef struct Queuenode
+{
+    int data;
+    struct Queuenode* next;
+}Qnode;
+typedef struct Queue
+{
+    Qnode* head;
+    Qnode* tail;
+}Queue;
+void initQueue(Queue* q)
+{
+    q->head = NULL;
+    q->tail = NULL;
+}
+typedef struct {
+    Queue Q1;
+    Queue Q2;
+} MyStack;
+void pushQueue(Queue* q, int x)
+{
+    assert(q);
+    Qnode* newnode = (Qnode*)malloc(sizeof(Qnode));
+    newnode->data = x;
+    newnode->next = NULL;
+
+    if (q->head == NULL)
+    {
+        q->head = q->tail = newnode;
+    }
+    else
+    {
+        q->tail->next = newnode;
+        q->tail = newnode;
+    }
+}
+void popQueue(Queue* q)
+{
+    assert(q);
+    assert(q->head);
+    Qnode* next = q->head->next;
+    free(q->head);
+    q->head = next;
+    
+}
+int Queueback(Queue* q)
+{
+    assert(q);
+    return q->tail->data;
+
+}
+int Queueempty(Queue* q)
+{
+    if (q->head == NULL)
+        return 0;
+    else
+        return 1;
+
+}
+int Queuetop(Queue* q)
+{
+    assert(q);
+    assert(q->head);
+    return q->head->data;
+}
+int Queuesize(Queue* q)
+{
+    Qnode* cur = q->head;
+    int count = 0;
+    while (cur)
+    {
+        count++;
+        cur = cur->next;
+    }
+    return count;
+}
+void Queuedestory(Queue* q)
+{
+    if (q->head == NULL)                               
+    {
+        return 0;          //这里用asser在leetcode上面，队列1本来就是空了，那么断言就会卡在这儿，不会继续释放队列2，
+                           //更不会释放后面动态开辟来存放两个队列指针的内存，而这就是leetcode检查destroy函数的指标，
+                           //即使不考虑内存泄漏，不去一一释放队列1和2的动态内存，其实leetcode也不会报错
+    }
+    Qnode* next = q->head->next;//最好不要一上来就设置q->head的下一个节点，有可能q->head本身为空，即对空指针进行了解引用操作
+    while (next)                
+    {
+        free(q->head);
+        q->head = next;
+        next = next->next;
+    }
+    free(q->head);
+    q->head = q->tail = NULL;
+    
+    //错误原因一：原代码：free(q->head);
+    //                 q->head = NULL;
+    //                  free(q->tail)
+    //                  q->tail=NULL;
+    //                  如果是只剩下一个节点，那么head和tail指向的是同一个空间，将一个动态开辟内存重复释放了两次，故报错
+
+    //错误原因二：原代码：free(q->head);此处再free掉q->head是因为，当q->head只有这一个节点时，while（next）循环不会进去，因为next是NULL，而此时q->head还没有释放，要先释放再置为空
+    //                 q->head = q->tail = NULL;
+}
+void myStackPush(MyStack* obj, int x) {
+    if (Queueempty(&obj->Q2) == 0)
+    {
+        pushQueue(&obj->Q1, x);
+    }
+    else
+    {
+        pushQueue(&obj->Q2, x);
+    }
+}
+MyStack* myStackCreate()
+{
+    MyStack* st = (MyStack*)malloc(sizeof(MyStack));
+    initQueue(&st->Q1);
+    initQueue(&st->Q2);
+    return st;
+}
+int myStackPop(MyStack* obj) {
+    if (Queueempty(&obj->Q1) != 0)
+    {
+        while (Queuesize(&obj->Q1) > 1)
+        {
+            pushQueue(&obj->Q2, Queuetop(&obj->Q1));
+            popQueue(&obj->Q1);
+        }
+        int ret = Queuetop(&obj->Q1);
+        popQueue(&obj->Q1);
+        return ret;
+    }
+    else
+    {
+        while (Queuesize(&obj->Q2) > 1)
+        {
+            pushQueue(&obj->Q1, Queuetop(&obj->Q2));
+            popQueue(&obj->Q2);
+        }
+        int ret = Queuetop(&obj->Q2);
+        popQueue(&obj->Q2);
+        return ret;
+    }
+
+}
+int myStackTop(MyStack* obj) {
+    if (Queueempty(&obj->Q1) == 1)
+    {
+        return Queueback(&obj->Q1);
+    }
+    else
+    {
+        return Queueback(&obj->Q2);
+    }
+
+}
+int myStackEmpty(MyStack* obj) {
+
+    if (Queueempty(&obj->Q1) == 0 && Queueempty(&obj->Q2) == 0)
+        return 0;
+    else
+        return 1;
+
+}
+void myStackFree(MyStack* obj) {
+    Queuedestory(&obj->Q1);
+    Queuedestory(&obj->Q2);
+    free(obj);
+    obj = NULL;
+
+}
+int main()
+{
+  /*  Queue Q;
+    initQueue(&Q);
+    pushQueue(&Q,1);
+    pushQueue(&Q, 2);
+    pushQueue(&Q, 3);
+    pushQueue(&Q, 4);
+    pushQueue(&Q, 5);
+    popQueue(&Q);
+    popQueue(&Q);
+    popQueue(&Q);
+    popQueue(&Q);
+    popQueue(&Q);*/
+    
+    MyStack* st =myStackCreate();
+    myStackPush(st, 1);
+    myStackPush(st, 2);
+    int pop = myStackPop(st);
+    int top = myStackTop(st);
+    int emp = myStackEmpty(st);
+    myStackFree(st);
+    printf("%d %d %d ", pop, top, emp);
+
+    //myStackPush(st, 3);
+    //myStackPush(st, 4);
+    /*myStackPush(st, 3);
+    myStackPush(st, 4);*/
+
+    //int ret1 = myStackPop(st);
+    //int ret2 = myStackPop(st);
+    
+    //int i=Queueback(&Q);
+    //int p=Queuetop(&Q);
+   /* int a=Queueempty(&Q);
+    int size=Queuesize(&Q);*/
+    //Queuedestory(&Q);
+    
+
+    return 0;
+}
