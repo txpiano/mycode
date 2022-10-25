@@ -1,0 +1,106 @@
+//void tcfanzhuan(struct ListNode* head)
+//{
+//	assert(head);
+//	struct ListNode* cur = head;
+//
+//	struct ListNode* newlist = NULL;
+//
+//	/*newlist = cur;
+//	cur = cur->next;
+//	newlist->next = NULL;*/
+//	
+//
+//	while (cur)
+//	{
+//		struct ListNode* memery = cur;
+//        memery = cur->next;
+//
+//		cur->next = newlist;
+//		newlist = cur;
+//		/*if (cur == NULL)
+//		{
+//			break;
+//		}*/
+//		cur = memery;
+//	}
+//
+//
+//
+//}
+
+//struct ListNode {
+//	int val;
+//	struct ListNode* next;
+//};
+//
+//void hebing(struct ListNode* list1, struct ListNode* list2)
+//{
+//	struct ListNode* new = (struct ListNode*)malloc(sizeof(struct ListNode));
+//	new->val = 0;
+//	new->next = NULL;
+//	struct ListNode* head = new;
+//	
+//	while (list1 && list2)
+//	{
+//		if (list1->val <= list2->val)
+//		{
+//			new->next = list1;
+//			new = list1;
+//			list1 = list1->next;
+//	    }
+//		else
+//		{
+//			new->next = list2;
+//			new = list2;
+//			list2 = list2->next;
+//		}
+//		
+//
+//	}
+//	if (list1 == NULL)
+//	{
+//		new->next = list2;
+//	}
+//	else
+//	{
+//		new->next = list1;
+//	}
+//	
+//	struct ListNode* memery = new->next;//因为要防止内存泄漏，所以要将newfree掉，但是又要返回该处的地址，则用memery来保存地址
+//	free(new);
+//	new = NULL;
+//
+//
+//
+//}
+//
+//void fenge(struct ListNode* head, int x)
+//{
+//	struct ListNode* less = (struct ListNode*)malloc(sizeof(struct ListNode));
+//	struct ListNode* bigger = (struct ListNode*)malloc(sizeof(struct ListNode));
+//	struct ListNode* cur = head;
+//	struct ListNode* memeryless = less;
+//	struct ListNode* memerybigger = bigger;
+//
+//	while (cur)
+//	{
+//
+//		if (cur->val < x)
+//		{
+//			less->next = cur;
+//			less = cur;
+//			cur = cur->next;
+//		}
+//		else
+//		{
+//			bigger->next = cur;
+//			bigger = cur;
+//			cur = cur->next;
+//		}
+//	}                   //其实只需要将bigger的next成为空指针就行，less始终是要链接bigger的
+//	less->next = NULL;//注意：bigger和less新链表的最后一个节点，可能不是原链表的最后一个节点，那么
+//	                   //就有可能这个节点后面还链接了其原链表的节点，所以我们可以将less和bigger的next全设置为NULL；
+//	                   //以免最终连接bigger和less两个链表后后面会有重复的节点。
+//	bigger->next = NULL;
+//
+//	less->next = memerybigger->next;
