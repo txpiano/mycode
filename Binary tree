@@ -1,0 +1,209 @@
+void adjustup(int* data, int child);
+typedef struct heap
+{
+    int* data;
+    int size;
+    int capacity;
+}heap;
+void initheap(heap* hp)
+{
+    hp->data = NULL;
+    hp->capacity = 0;
+    hp->size = 0;
+}
+void pushheap(heap* hp,int x)
+{
+    if (hp->capacity == hp->size)
+    {
+        int newcapacity = hp->capacity == 0 ? 10 : 2 * hp->capacity;
+        int* ret = (int*)realloc(hp->data, sizeof(int) * newcapacity);
+        if (ret == NULL)
+        {
+            printf("%s", strerror(errno));
+            exit(-1);
+        }
+        hp->data = ret;
+        hp->capacity = newcapacity;
+    }
+
+    hp->data[hp->size] = x;
+    hp->size++;
+
+    adjustup(hp->data, hp->size - 1);
+}
+void swap(int* x, int* y)
+{
+    int ret = *x;
+    *x = *y;
+    *y = ret;
+}
+void adjustup(int* data,int child)
+{
+    assert(data);
+    int parent = (child - 1) / 2;
+    while (child)
+    {
+        if (data[parent] > data[child])
+        {
+            swap(&data[parent], &data[child]);
+            child = parent;
+            parent = (child - 1) / 2;
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+}
+
+void popheap(heap* hp,int size)
+{
+    hp->data[0] = hp->data[hp->size-1];
+    hp->size--;
+
+    int parent = 0;
+    int child = 2*parent+1;
+    while(child<hp->size)//不能是小于等于，因为hp->size的位置，已经是被删去的节点，当child等于该节点时，那么child相当于已经超出范围了。
+    {
+        if (child<hp->size && hp->data[child] > hp->data[child + 1])
+        {
+            child = child + 1;
+        }
+        else
+        {
+            child = child;
+        }
+        if (hp->data[parent] <= hp->data[child])
+        {
+            break;
+        }
+        else
+        {
+            swap(&hp->data[parent], &hp->data[child]);
+            parent = child;
+            child = 2 * parent + 1;
+        }
+
+    }
+
+
+}
+void heapdestroy(heap* hp)
+{
+    assert(hp);
+    assert(hp->data);
+    free(hp->data);
+    hp->data = NULL;
+}
+int heapempty(heap* hp)
+{
+    if (hp->size != 0)
+        return 1;
+    else
+        return 0;
+}
+int heapsize(heap* hp)
+{
+    return hp->size;
+}
+void adjustdown(heap* hp)
+{
+    int parent = 0;
+    int child = 2 * parent + 1;
+    while (child < hp->size)//不能是小于等于，因为hp->size的位置，已经是被删去的节点，当child等于该节点时，那么child相当于已经超出范围了。
+    {
+        //注意：不能是child<hp->size，因为如果child刚好走到最后面，此时的child是小于size的，循环继续走，但右节点本来不存在
+        // child+1就是一个随机值，可能很大，也可能是负数，那么这个时候child就会变成本来不存在的右节点的下标，就会将一个不存在的值交换上去
+        //所以要判断的是右节点存不存在，而不是左节点存不存在，如果左节点不存在了，那么此时child=size，循环不进行。
+        if (child+1<hp->size && hp->data[child] > hp->data[child + 1])
+        {
+            child = child + 1;
+        }
+        else
+        {
+            child = child;
+        }
+        if (hp->data[parent] <= hp->data[child])
+        {
+            break;
+        }
+        else
+        {
+            swap(&hp->data[parent], &hp->data[child]);
+            parent = child;
+            child = 2 * parent + 1;
+        }
+
+    }
+
+
+}
+void printheap(heap* hp)
+{
+    for (int i = 0; i < hp->size; i++)
+    {
+        printf("%d ",hp->data[i]);
+    }
+
+}
+int main()
+{
+    heap hp;
+    initheap(&hp);
+   // pushheap(&hp, 1);
+   // pushheap(&hp, 2);
+   // pushheap(&hp, 3);
+   // pushheap(&hp, 4);
+   // pushheap(&hp, 0);
+   // pushheap(&hp, 0);
+   //// pushheap(&hp, 0);
+   //// adjustup(hp.data, hp.size - 1);
+   // popheap(&hp,hp.size-1);
+   // popheap(&hp, hp.size - 1);
+   // popheap(&hp, hp.size - 1);
+    //heapdestroy(&hp);
+    //heapempty(&hp);
+    //heapsize(&hp);
+    
+   // adjustup(hp.data,hp.size - 1);
+   // adjustdown(hp.data, hp.size, hp.size - 1);
+
+    int arr[10000] = { 0 };
+    for (int i = 0; i < 10000; i++)
+    {
+        arr[i] = i;
+    }
+    arr[5] = 10001;
+    arr[346] = 10003;
+    arr[5420] = 10005;
+    arr[7891] = 10009;
+    arr[4561] = 10008;
+    arr[4562] = 10007;
+    arr[4563] = 10002;
+    arr[4564] = 10004;
+    arr[4565] = 10006;
+    arr[4566] = 10010;
+
+
+
+    for (int j = 0; j < 15; j++)
+    {
+        pushheap(&hp, arr[j]);
+    }
+    
+    for (int k= 15; k < 10000; k++)
+    {
+        if (arr[k] > hp.data[0])
+        {
+            hp.data[0] = arr[k];
+            adjustdown(&hp);        
+        }
+
+    }
+    printheap(&hp);
+    
+
+
+    return 0;
+}
