@@ -1,0 +1,104 @@
+  typedef struct TreeNode {
+     int val;
+     struct TreeNode *left;
+      struct TreeNode *right;
+  }TreeNode;
+ 
+void _inorderTraversal(struct TreeNode* root, int* arr, int* pi)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    _inorderTraversal(root->left, arr, pi);
+    arr[*pi] = root->val;
+    (*pi)++;
+    _inorderTraversal(root->right, arr, pi);
+
+}
+void treesize(struct TreeNode* root, int* pj)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    (*pj)++;
+    treesize(root->left, pj);
+    treesize(root->right, pj);
+
+}
+void _inorderTraversal(struct TreeNode* root, int* arr, int* pi)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    _inorderTraversal(root->left, arr, pi);
+    arr[*pi] = root->val;
+    (*pi)++;
+    _inorderTraversal(root->right, arr, pi);
+
+}
+void treesize(struct TreeNode* root, int* pj)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    (*pj)++;
+    treesize(root->left, pj);
+    treesize(root->right, pj);
+
+}
+int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    int i = 0;
+    int j = 0;
+
+    treesize(root, &j);
+    int* a = (int*)malloc(sizeof(int) * j);
+
+    _inorderTraversal(root, a, &i);
+
+    *returnSize = j;
+    return a;
+
+}
+
+int main()
+{
+    TreeNode* tn1 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* tn2 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* tn3 = (TreeNode*)malloc(sizeof(TreeNode));
+    
+    tn1->left = NULL;
+    tn1->val = 1;
+    tn1->right = tn2;
+
+    tn2->left = tn3;
+    tn2->val = 2;
+    tn2->right = NULL;
+
+    tn3->left = NULL;
+    tn3->val = 3;
+    tn3->right = NULL;
+    
+    int j = 0;
+    int i = 0;
+    treesize(tn1, &j);
+    printf("%d ", j);
+    
+    int arr[100] = { 0 };
+
+    _inorderTraversal(tn1, arr, &i);
+    printf("%d ", arr[0]);
+    printf("%d ", arr[1]);
+    printf("%d ", arr[2]);
+    printf("%d ", arr[3]);
+
+
+    return 0;
+}
