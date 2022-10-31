@@ -1,0 +1,164 @@
+struct ListNode {
+    int val;
+    struct ListNode* next;
+};
+
+
+int main()
+{
+    struct ListNode* n1 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n2 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n3 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n4 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n5 = (struct ListNode*)malloc(sizeof(struct ListNode));
+	struct ListNode* n6 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n7 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n8 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n9 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n10 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n11 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n12 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n13 = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* n14 = (struct ListNode*)malloc(sizeof(struct ListNode));
+
+	n1->val = 9;
+	n1->next = NULL;
+	/*n2->val = 4;
+	n2->next = n3;
+	n3->val = 3;
+	n3->next = NULL;*/
+
+	n4->val = 1;
+	n4->next = n5;
+	n5->val = 9;
+	n5->next = n6;
+	n6->val = 9;
+    n6->next = n7;
+    n7->val = 9;
+    n7->next = n8;
+    n8->val = 9;
+    n8->next = n9;
+    n9->val = 9;
+    n9->next = n10;
+    n10->val = 9;
+    n10->next = n11;
+    n11->val = 9;
+    n11->next = n12;
+    n12->val = 9;
+    n12->next = n13;
+    n13->val = 9;
+    n13->next = NULL;
+ /*   n14->val = 9;
+    n14->next = NULL;
+    n7->val = 9;
+    n7->next = NULL;*/
+
+
+    struct ListNode* left1 = NULL;
+    struct ListNode* mid1 = n1;
+    struct ListNode* right1 = n1->next;
+
+    struct ListNode* left2 = NULL;
+    struct ListNode* mid2 = n4;
+    struct ListNode* right2 = n4->next;
+
+
+    struct ListNode* cur1 = n1;
+    struct ListNode* cur2 = n4;
+
+    int i = 0;
+    int j = 0;
+    unsigned long long sum1 = 0;
+    unsigned long long sum2 = 0;
+
+    while (mid1)
+    {
+        mid1->next = left1;
+
+        left1 = mid1;
+        mid1 = right1;
+        if (right1 == NULL)
+        {
+            break;
+        }
+        right1 = right1->next;
+
+    }
+    while (mid2)
+    {
+        mid2->next = left2;
+
+        left2 = mid2;
+        mid2 = right2;
+        if (right2 == NULL)
+        {
+            break;
+        }
+        right2 = right2->next;
+
+    }
+
+    unsigned int count1 = 0;
+    unsigned int count2 = 0;
+    struct ListNode* tail1 = left1;
+    struct ListNode* tail2 = left2;
+    while (tail1)
+    {
+        count1++;
+        tail1 = tail1->next;
+    }
+    while (tail2)
+    {
+        count2++;
+        tail2 = tail2->next;
+    }
+    
+    while (left1)
+    {
+        sum1 += (left1->val) * pow(10, count1-1);
+        if (left1->next==NULL)
+        {
+            break;
+        }
+        count1--;
+        left1 = left1->next;
+    }
+
+    while (left2)
+    {
+        sum2 += (left2->val) * pow(10, count2-1);
+        if(left2->next==NULL)
+        {
+            break;
+        }
+            count2--;
+        left2 = left2->next;
+    }
+    unsigned long long sum = sum1 + sum2;
+
+
+    if (sum == 0)
+    {
+        return left1;
+    }
+
+
+    struct ListNode* head = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* start = head;
+    while (sum)
+    {
+        struct ListNode* newnode = (struct ListNode*)malloc(sizeof(struct ListNode));
+        newnode->val = sum % 10;
+        newnode->next = NULL;
+
+        head->next = newnode;
+        head = newnode;
+
+        sum = sum / 10;
+
+    }
+   
+
+
+    return 0;
+}
