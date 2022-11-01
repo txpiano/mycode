@@ -1,0 +1,79 @@
+int main()
+{
+    heap hp;
+    initheap(&hp);
+   // pushheap(&hp, 1);
+   // pushheap(&hp, 2);
+   // pushheap(&hp, 3);
+   // pushheap(&hp, 4);
+   // pushheap(&hp, 0);
+   // pushheap(&hp, 0);
+   //// pushheap(&hp, 0);
+   //// adjustup(hp.data, hp.size - 1);
+   // popheap(&hp,hp.size-1);
+   // popheap(&hp, hp.size - 1);
+   // popheap(&hp, hp.size - 1);
+    //heapdestroy(&hp);
+    //heapempty(&hp);
+    //heapsize(&hp);
+    
+   // adjustup(hp.data,hp.size - 1);
+   // adjustdown(hp.data, hp.size, hp.size - 1);
+   // 
+   // 
+    //创建一个0到9999的数组
+    int arr[10000] = { 0 };
+    for (int i = 0; i < 10000; i++)
+    {
+        arr[i] = i;
+    }
+    //将其中随机的十个数改为大于10000的十个数
+    arr[5] = 10001;
+    arr[346] = 10003;
+    arr[5420] = 10005;
+    arr[7891] = 10009;
+    arr[4561] = 10008;
+    arr[4562] = 10007;
+    arr[4563] = 10002;
+    arr[4564] = 10004;
+    arr[4565] = 10006;
+    arr[4566] = 10010;
+
+
+    //从数组中取15个数，建立一个十五个节点的小堆
+    for (int j = 0; j < 15; j++)
+    {
+        pushheap(&hp, arr[j]);
+    }
+    //取数组中剩下的元素，与堆顶比较，如果比堆顶大，就向下调整
+    //如果比堆顶小，就跳过该元素，取下一个元素比较
+    for (int k= 15; k < 10000; k++)
+    {
+        if (arr[k] > hp.data[0])
+        {
+            hp.data[0] = arr[k];
+            adjustdown(&hp);        
+        }
+
+    }
+    printheap(&hp);
+    
+
+    int arr1[] = { 70,56,30,25,15,10,75 };
+    //向上调整，建立小堆，起点是根节点的左子节点
+   // for (int i = 1; i <= 6; i++)
+   // {
+    //    adjustup(&arr1, i);
+   // }
+    //向下调整，建立小堆，起点是最后一个节点的父节点
+    int size = sizeof(arr1) / sizeof(arr1[0]);
+    int parent = 2;
+    for(int j=0;j<3;j++)//此处的j可以直接用parent替换，那么parent>=0;parent--；
+    {
+        adjustdown1(&arr1, size,parent);//parent=(child-1)/2    child=size-1;
+        parent--;
+
+    }
+
+    return 0;
+}
