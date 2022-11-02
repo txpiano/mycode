@@ -1,0 +1,162 @@
+void Insertsort(int* a,int size)
+{
+ 
+
+        for (int j = 0; j < size - 1; j++)
+        {
+            int end = j;
+            int x = a[end + 1];
+            while (end >= 0)
+            {
+                if (a[end] > x)
+                {
+                    a[end + 1] = a[end];
+                    end --;
+                }
+                else
+                {
+                    //a[end + 1] = x;  //此时就插入x的话，也必须break，才能跳出循环，要不然就会死循环
+                                       //break是必须的，而出循环有两种可能：一种是end小于0，一种是x插入在中间
+                                       //那么无论哪种情况，都只需要在end+1的位置插入x就行了，所以没必要在中间就把x插入
+                    break;
+                }
+            }
+            a[end + 1] = x;
+
+        }
+        
+    
+      
+}
+void Shellsort(int* a, int size)
+{
+    //预处理将其间隔为3
+    //当gap大于1时，是预排序，当gap等于1时，就是插入排序
+    int gap = 3;
+    while (gap)//这里不能写gap>=1，要不然会死循环，gap有可能永远为1
+    {
+        //  gap /= 2;gap最后一定会等于1
+         // 本来gap/3结果可能是0,1,2，加1，则结果为1,2,3，一定会等于1
+        
+        //i++：一锅炖，即每组都一个一个插入排序，轮着来，可以少写一层循环
+        //i+=gap:单纯地将完整的一组地进行了插入排序，但这样还要将end设置为0,1,2对应三组的三个起点，多设置一层循环
+        for (int i = 0; i < size - gap; i++)
+        {
+            int end = i;
+            int x = a[end + gap];
+            while (end >= 0)
+            {
+                if (a[end] > x)
+                {
+                    a[end + gap] = a[end];
+                    end-=gap;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            a[end + gap] = x;
+
+        }
+        gap /= 3;
+    }
+}
+void Swap(int* x, int* y)
+{
+    int tmp = *x;
+    *x = *y;
+    *y = tmp;
+}
+void Selectsort(int* a, int size)
+{
+    for (int min = 0; min < size; min++)
+    {
+        for (int i = min; i < size; i++)
+
+        {
+            if (a[i] < a[min])
+            {
+                Swap(&a[min], &a[i]);
+            }
+            
+        }
+    }
+    
+}
+void Selectsort1(int* a, int size)
+{
+    int min = 0;
+    int max = size - 1;
+    while (min < max)
+    {
+        for (int i = min; i < max+1; i++)
+        {
+            if (a[i] < a[min])
+            {
+                Swap(&a[min], &a[i]);
+            }
+            else if(a[i]>a[max])
+            {
+                Swap(&a[max], &a[i]);
+            }
+        }
+        min++;
+        max--;
+    }
+
+}
+
+void adjustdown(int* a, int size,int parent)
+{
+    int child = 2 * parent + 1;
+    while (child < size)
+    {
+        if (child + 1 < size && a[child + 1] > a[child])
+        {
+            child = child + 1;
+        }
+        if (a[child] > a[parent])
+        {
+            Swap(&a[parent], &a[child]);
+            parent = child;
+            child = 2 * parent + 1;
+        }
+        else
+        {
+            break;
+        }
+       
+    }
+
+
+}
+void Heapsort(int* a, int size)
+{
+    int child = (size - 1 - 1) / 2;
+    for (int i = child; i >= 0; i--)
+    {
+        adjustdown(a, size, i);
+    }
+    int end = size-1 ;
+    while (end > 0)
+    {
+        Swap(&a[0], &a[end]);//这里交换之后，就已经相当于把最后一个元素不看作是数组内的了
+        adjustdown(a, end, 0);//那么这时数组长度就是end，且是把原来的最后一个元素放到最上去然后调堆，而不是从尾巴开始又开始调堆
+        end--;
+        
+    }
+
+
+}
+int main()
+{
+    int arr[] = { 1,2,5,3,9,4,8,5,1,26 };
+    int size = sizeof(arr) / sizeof(arr[0]);
+    //Insertsort(arr,size);
+    //Shellsort(arr, size);
+    //Selectsort1(arr, size);
+    Heapsort(arr, size);
+
+    return 0;
+}
