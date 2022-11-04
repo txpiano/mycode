@@ -1,0 +1,174 @@
+void merge(int* nums1,int m, int* nums2,int n)        leetcode合并两个有序数组，且空间复杂度为O(1)
+{
+    int end1 = m - 1;
+    int end2 = n - 1;
+    int end = m + n - 1;
+    while (end1 >= 0 && end2 >= 0)
+    {
+        if (nums1[end1] > nums2[end2])
+        {
+            nums1[end] = nums1[end1];
+            end1--;
+            end--;
+        }
+        else
+        {
+            nums1[end] = nums2[end2];
+            end2--;
+            end--;
+        }
+    }
+    if (end1 < 0)
+    {
+        for (int i = 0; i < end+1; i++)//应该是把nums2数组剩余的元素拷贝过去，而剩余的元素个数就是end2+1，进行end2+1次循环
+        {
+            nums1[i] = nums2[i];
+        }
+    }
+
+}
+
+int main()
+{
+
+    int arr1[] = { 4, 0, 0, 0, 0, 0 };
+    int arr2[] = { 1,2,3,5,6 };
+    merge(arr1, 1, arr2, 5);
+    return 0;
+}
+
+
+typedef int SLTDateType;
+typedef struct SListNode
+{
+    SLTDateType data;
+    struct SListNode* next;
+}SListNode;
+SListNode* BuySListNode(SLTDateType x)
+{
+    SListNode* newnode = (SListNode*)malloc(sizeof(SListNode));
+    newnode->data = x;
+    newnode->next = NULL;
+
+    return newnode;
+}
+void SListPrint(SListNode* plist)
+{
+    if (plist == NULL)
+    {
+        printf("NULL");
+    }
+    while (plist)
+    {
+        printf("%d->", plist->data);
+        plist = plist->next;
+    }
+    printf("NULL");
+}
+void SListPushBack(SListNode** pplist, SLTDateType x)
+{
+
+    SListNode* newnode=BuySListNode(x);
+    SListNode* tail = *pplist;
+    if (*pplist == NULL)
+    {
+        *pplist = newnode;
+    }
+    else
+    {
+        while (tail->next != NULL)
+        {
+            tail = tail->next;
+        }
+
+        tail->next = newnode;
+    }
+}
+void SListPushFront(SListNode** pplist, SLTDateType x)
+{
+    SListNode* newnode = BuySListNode(x);
+    newnode->next = *pplist;
+    *pplist = newnode;
+}
+void SListPopBack(SListNode** pplist)
+{
+    assert(*pplist);    
+    SListNode* tail = *pplist;
+    SListNode* prev = tail;
+    while (tail->next!=NULL)
+    {
+        prev = tail;
+        tail = tail->next;
+    }
+    if (tail->next == NULL)
+    {
+        free(tail);
+        prev = NULL;
+    }
+    else
+    {
+        free(tail);
+        prev->next = NULL;
+    }
+}
+void SListPopFront(SListNode** pplist)
+{
+     assert(*pplist);
+     SListNode* next = (*pplist)->next;
+     free(*pplist);
+     *pplist = next;
+}
+SListNode* SListFind(SListNode* plist, SLTDateType x)
+{
+    //if (plist == NULL)
+    //{
+    //    return NULL;
+    //}
+    SListNode* cur = plist;
+    while (cur)
+    {
+        if (cur->data == x)
+        //{
+            return cur;
+        //}
+        //else
+        //{
+            cur = cur->next;
+        //}
+    }
+    return NULL;
+}
+void SListInsertAfter(SListNode* pos, SLTDateType x)
+{
+    if (pos == NULL)
+    {
+        return;
+    }
+    SListNode* newnode=BuySListNode(x);
+    SListNode* next = pos->next;
+    pos->next = newnode;
+    newnode->next = next;
+}
+void SListEraseAfter(SListNode* pos)
+{
+    assert(pos);
+    if (pos->next == NULL)
+    {
+        return;
+    }
+    SListNode* next = pos->next->next;
+    free(pos->next);
+    pos->next = next;
+
+}
+void SListDestroy(SListNode* plist)
+{
+    SListNode* cur = plist;
+    while (cur)
+    {
+        plist = plist->next;
+        free(cur);
+        cur = plist;
+    }
+}
+//
