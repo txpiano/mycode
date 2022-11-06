@@ -1,0 +1,48 @@
+void quicksorthole(int* a, int size)
+{
+    int hole = 0;
+    int key = a[0];
+    int left = 0;
+    int right = size - 1;
+    while (left < right)
+    {
+        while (left < right && a[right] >= key)
+        {
+            right--;
+        }
+        swap(&a[hole], &a[right]);//直接交换值
+        //a[hole] = a[right];//直接赋值：右边找小，放到左边的坑里面去
+        hole = right;
+        while (left < right && a[left] < key)
+        {
+            left++;
+        }
+        swap(&a[hole], &a[left]);//交换值
+        //a[hole] = a[left];//赋值:左边找大，放到右边的坑里面去
+        hole = left;
+    }
+    //a[hole] = key;//因为将hole看做了空，所以最后一个坑要用key来填，故要赋值
+                    //但如果是直接交换，相当于就是把小于key的值换到前面，大于key的值换到后面，最后left=right时，key位于中间
+}
+void quicksortdouble(int* a, int size)
+{
+
+    //左边作Key
+    //int key = a[0];
+    //int cur = 1;
+    //int prev = 0;
+    //右边作Key
+    int cur = 0;
+    int prev = -1;
+    int key = a[size - 1];
+    while (cur < size)
+    {
+        if (a[cur] < key)
+            swap(&a[cur], &a[++prev]);
+        
+        cur++;
+    }
+    swap(&a[0], &a[prev]);//左边作Key，直接交换
+    swap(&a[size-1], &a[++prev]);//右边作Key，prev要加加再交换
+    
+}
