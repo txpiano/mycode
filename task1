@@ -1,0 +1,141 @@
+typedef struct ListNode {
+    int val;
+    struct ListNode* next;
+}ListNode;
+int chkPalindrome(ListNode* A) {
+        ListNode* solw = A;
+        ListNode* fast = A;
+        ListNode* cur = A;
+        while (fast->next != NULL && fast)
+        {
+            solw = solw->next;
+            fast = fast->next->next;
+        }
+        ListNode* next = solw->next;
+        ListNode* Nextnext = solw->next->next;
+        solw->next = NULL;
+
+        while (next)
+        {
+            next->next = solw;
+
+            solw = next;
+            next = Nextnext;
+            if (next == NULL)
+            {
+                break;
+            }
+            Nextnext = Nextnext->next;
+
+        }
+
+        while (cur && solw)
+        {
+            if (cur->val != solw->val)
+            {
+                return 0;
+            }
+            else {
+
+                cur = cur->next;
+                solw = solw->next;
+            }
+
+        }
+        return 1;
+    }
+ListNode* ListCreat(int* a, int n)
+{
+
+    ListNode* newList = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* tail = newList;
+    for (int i = 0; i < n; i++)
+    {
+        ListNode* newnode = (ListNode*)malloc(sizeof(ListNode));
+        newnode->val = a[i];
+        newnode->next = NULL;
+
+        tail->next = newnode;
+        tail = newnode;
+
+    }
+    return newList->next;
+
+}
+struct ListNode* detectCycle(struct ListNode* head) {
+    struct ListNode* slow = head;
+    struct ListNode* fast = head;
+    while (fast && fast->next)
+    {
+
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+        {
+            break;
+        }
+    }
+    if (fast == NULL || fast->next == NULL)
+    {
+        return NULL;
+    }
+    struct ListNode* newhead = slow->next;
+    slow->next = NULL;
+
+    int count1 = 0;
+    int count2 = 0;
+    struct ListNode* tail1 = newhead;
+    struct ListNode* tail2 = head;
+
+    while (tail1->next)
+    {
+        count1++;
+        tail1 = tail1->next;
+    }
+    while (tail2->next)
+    {
+        count2++;
+        tail2 = tail2->next;
+    }
+    int k = abs(count1 - count2);
+    struct ListNode* Longlist = head;
+    struct ListNode* Shortlist = newhead;
+    if (count1 < count2)
+    {
+        Longlist = newhead;
+        Shortlist = head;
+    }
+    while (k--)
+    {
+        Longlist = Longlist->next;
+    }
+    while (Longlist != Shortlist)
+    {
+        Longlist = Longlist->next;
+        Shortlist = Shortlist->next;
+    }
+    return Longlist;
+
+}
+int main()
+{
+   /* int arr[] = {  };
+    ListNode* newlist = ListCreat(arr, 5);*/
+    ListNode* n1 = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* n2 = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* n3 = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* n4 = (ListNode*)malloc(sizeof(ListNode));
+
+    n1->val = 3;
+    n1->next = n2;
+    n2->val = 2;
+    n2->next = n3;
+    n3->val = 0;
+    n3->next = n4;
+    n4->val = -4;
+    n4->next = n2;
+
+    ListNode* pos = detectCycle(n1);
+
+    return 0;
+}
