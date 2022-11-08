@@ -1,0 +1,42 @@
+void Mergesort(int* a, int left, int right,int* tmp)
+{
+    if (left >= right)
+    {
+        return;
+    }
+    int mid = (left + right) / 2;
+    Mergesort(a, left, mid,tmp);
+    Mergesort(a, mid + 1, right,tmp);
+
+    int begin1 = left;
+    int end1 = mid;
+    int begin2 = mid + 1;
+    int end2 = right;
+
+    
+    int i = left;
+    while (begin1 <= end1 && begin2 <= end2)
+    {
+        if (a[begin1] < a[begin2])
+        {
+            tmp[i++] = a[begin1++];
+        }
+        else
+        {
+            tmp[i++] = a[begin2++];
+        }
+    }
+    while(begin1 > end1 && begin2<=end2)
+    {
+        tmp[i++] = a[begin2++];
+    }
+    while (begin2 > end2 && begin1 <= end1)
+    {
+        tmp[i++] = a[begin1++];
+    }
+    for (int j = left; j <=right; j++)
+    {
+        a[j] = tmp[j];
+   }
+
+}
