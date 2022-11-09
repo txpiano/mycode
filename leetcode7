@@ -1,0 +1,53 @@
+ListNode* copyRandomList(ListNode* head) {
+	if (head == NULL)
+	{
+		return NULL;
+	}
+	ListNode* cur = head;
+	ListNode* cur1 = head;
+	while (cur)
+	{
+		int x = cur->val;
+		//ListNode* new=Buynewnode(x);
+		ListNode* new = (ListNode*)malloc(sizeof(ListNode));
+		new->val = x;
+		new->next = cur->next;
+		cur->next = new;
+
+		cur = cur->next->next;
+	}
+	ListNode* cur2 = head;
+	ListNode* Nextnew = cur2->next;
+	while (cur2)
+	{
+		if (cur2->prev == NULL)
+		{
+			Nextnew->prev = NULL;
+		}
+		else
+		{
+			Nextnew->prev = cur2->prev->next;
+		}
+		cur2 = Nextnew->next;
+		if (cur2 == NULL)
+		{
+			break;
+		}
+		Nextnew = cur2->next;
+
+	}
+	ListNode* Next = cur1->next->next;
+	while (cur1&&Next)
+	{
+
+		cur1->next->next = Next->next;
+
+
+		cur1 = Next;
+		
+		Next = Next->next->next;
+
+	}
+	return head->next;
+
+}
