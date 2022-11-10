@@ -1,0 +1,193 @@
+typedef struct stack
+{
+	int* data;
+	int size;
+	int capacity;
+
+}stack;
+typedef struct Queuenode       
+{
+    int data;
+    struct Queuenode* next;
+}Qnode;
+typedef struct Queue
+{
+    Qnode* head;
+    Qnode* tail;
+}Queue;
+void initQueue(Queue* q)
+{
+	q->head = NULL;
+	q->tail = NULL;
+
+}
+void pushQueue(Queue* q, int x)
+{
+
+	Qnode* newnode = (Qnode*)malloc(sizeof(Qnode));
+	newnode->data = x;
+	newnode->next = NULL;
+
+	if (q->head == NULL)
+	{
+		q->head = newnode;
+	}
+	else
+	{
+		Qnode* cur = q->head;
+		while (cur->next != NULL)
+		{
+			cur = cur->next;
+		}
+		q->tail = cur;
+
+		q->tail->next = newnode;
+	}
+}
+int PopQueue(Queue* q)
+{
+	int ret = q->head->data;
+	q->head = q->head->next;
+	
+	return ret;
+}
+void initstack(stack* st)
+{
+	st->capacity = 10;
+	st->data = (int*)malloc(10 * sizeof(int));
+	st->size = 0;
+
+}
+void swap(int* x, int* y)
+{
+	int tmp = *x;
+	*x = *y;
+	*y = tmp;
+
+}
+void pushstack(stack* st, int x)
+{
+	assert(st);
+	if (st->capacity == st->size)
+	{
+		int newcapacity = 2 * st->capacity;
+
+		int* tmp = (int*)realloc(st->data, newcapacity * sizeof(int));
+		if (tmp == NULL)
+		{
+			printf("realloc fail");
+			exit(-1);
+		}
+		st->data = tmp;
+		st->capacity = newcapacity;
+	}
+
+	st->data[st->size] = x;
+	st->size++;
+
+}
+int Popstack(stack* st)
+{
+	st->size--;
+
+	return st->data[st->size];
+}
+void Quicksort1(int* a, int left, int right)
+{
+	
+
+	stack st;
+	initstack(&st);
+	
+	//将最初的left和right压入栈中
+	pushstack(&st, left);
+	pushstack(&st,right);
+	while (st.size > 0)
+	{
+		//将栈中的数据拿出来作为需要Partion排序的区间
+		int end = Popstack(&st);
+		int begin = Popstack(&st);
+
+		//返回排好后的数组中key值所处的下标
+		//可以通过该下标获得key之前和key之后的两个新区间
+		int mid = Partionsort(a, begin, end);
+		
+		//当左、右区间相等时，说明只有一个值，那么这个区间就排好序了，不用再把下标压入栈中
+		//不然就会发生越界,因为此时的begin和end相等，但是mid-1和mid+1就会超过这个范围
+		if (begin < mid - 1)
+		{
+			pushstack(&st, begin);
+			pushstack(&st, mid - 1);
+		}
+		if (mid + 1 < end)
+		{
+			pushstack(&st, mid + 1);
+			pushstack(&st, end);
+		}
+	}
+
+}
+void Quicksort2(int* a, int left, int right)
+{
+	//用队列来存储区间
+	//类似于层序，即像二叉树一样，是将同一高度的各个节点处理完了之后，再往下处理
+	Queue q;
+	initQueue(&q);
+
+	pushQueue(&q, left);
+	pushQueue(&q, right);
+
+	while (q.head!=NULL)
+	{
+	
+		int begin = PopQueue(&q);
+		int end = PopQueue(&q);
+
+
+		int mid = Partionsort(a, begin, end);
+
+		
+		if (begin < mid - 1)
+		{
+			pushQueue(&q, begin);
+			pushQueue(&q, mid - 1);
+		}
+		if (mid + 1 < end)
+		{
+			pushQueue(&q, mid + 1);
+			pushQueue(&q, end);
+		}
+	}
+
+}
+void partion3(int* a, int left, int right)
+{
+	int key = a[left];
+	int end = right;
+	int begin = left;
+	while (begin < end)
+	{
+		while (a[end] > key && end > begin)
+		{
+			end--;
+		}
+		while (a[begin] <= key && begin < end)
+		{
+			begin++;
+		}
+		swap(&a[begin], &a[end]);
+	}
+	swap(&a[left], &a[begin]);
+
+}
+int main()
+{
+	int arr[] = { 4,5,1,2,3,9,5,7,0,5,3,7,4 };
+	int size = sizeof(arr) / sizeof(arr[0]);
+	int* tmp = (int*)malloc(sizeof(arr));
+	//Mergesort1(arr, 0, size - 1, tmp);
+	partion3(arr, 0, size - 1);
+	//Quicksort2(arr, 0, size - 1);
+
+	return 0;
+}
