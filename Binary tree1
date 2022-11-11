@@ -1,0 +1,51 @@
+typedef struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+    
+}TreeNode;
+
+bool isUnivalTree(struct TreeNode* root) {
+    if (root == NULL)
+    {
+        return true;
+    }
+    if (root->left && root->left->val == root->val && root->right == NULL)
+    {
+        return isUnivalTree(root->left);
+    }
+    else if (root->right && root->right->val == root->val && root->left == NULL)
+    {
+        return isUnivalTree(root->right);
+    }
+    else if (root->left == NULL && root->left == NULL)
+    {
+        return true;
+    }
+    else if (root->left && root->left->val == root->val && root->right && root->right->val == root->val)
+    {
+        return isUnivalTree(root->left) && isUnivalTree(root->right);
+    }
+    else
+    {
+        return false;
+    }
+
+
+}
+int main()
+{
+    TreeNode* t1 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* t2 = (TreeNode*)malloc(sizeof(TreeNode));
+
+    t1->val = 2;
+    t1->left = NULL;
+    t1->right = t2;
+
+    t2->val = 1;
+    t2->left = NULL;
+    t2->right = NULL;
+
+    bool b=isUnivalTree(t1);
+    return 0;
+}
