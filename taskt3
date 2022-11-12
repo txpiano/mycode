@@ -1,0 +1,184 @@
+typedef int SLDatatype
+struct SListNode
+{
+    SLDatatype* data;//单链表的数据域
+    SListNode* next;//单链表的指针域：只存放下一个节点的地址
+};
+
+typedef int DLDatatype;
+struct DListNode
+{
+    DLDatatype data;
+    DListNode* prev;//存放上一个节点的地址
+    DListNode* next;//存放下一个节点的地址
+    
+};
+
+
+typedef int LTDataType;
+typedef struct ListNode
+{
+    LTDataType data;
+    struct ListNode* next;
+    struct ListNode* prev;
+}ListNode;
+
+ListNode* ListCreate()
+{
+    //创建一个哨兵节点作为头结点
+    ListNode* head = (ListNode*)malloc(sizeof(ListNode));
+
+    //哨兵节点存放的数据设置为0，无效数据
+    head->data = 0;
+
+    //哨兵节点的指针域都要指向自己
+    head->prev = head;
+    head->next = head;
+    
+    return head;//返回头结点
+}
+
+void ListPushBack(ListNode* plist, LTDataType x)
+{
+    assert(plist);//防止误用，传入空指针
+
+    //plist是头结点指针，x是插入的新节点的数据 
+
+    ListNode* tail = plist->prev;//找到尾结点tail
+
+    //创建新节点newnode
+    ListNode* newnode = (ListNode*)malloc(sizeof(ListNode));
+    tail->next = newnode;//将新节点连接在尾结点的后面
+
+    //给新结点的指针域和数据域赋值
+    newnode->data = x;
+    newnode->next = plist;//新节点下一个节点指向头结点
+    newnode->prev = tail;//新节点上一个节点是尾结点
+    
+    plist->prev = newnode;//头结点的上一个节点是新节点
+}
+
+void ListPopBack(ListNode* plist)
+{
+    ListNode* tail = plist->prev;//找到尾结点
+    ListNode* tailprev = tail->prev;//记录尾结点的上一个节点
+
+    //释放尾结点并将尾指针置空
+    free(tail);
+    tail = NULL;
+
+    tailprev->next = plist;//新的尾结点的下一个节点为头结点
+    plist->prev = tailprev;//头结点的上一个节点为新的尾结点
+}
+
+void ListPushFront(ListNode* plist, LTDataType x)
+{
+    //创建新节点newnode并给数据域赋值
+    ListNode* newnode = (ListNode*)malloc(sizeof(ListNode));
+    newnode->data = x;
+
+    ListNode* next = plist->next;//记录头结点的下一个节点next
+
+    //新节点的下一个节点为next，上一个节点为头结点plist
+    newnode->next = next;
+    newnode->prev = plist;
+
+    //头结点的下一个节点为新节点
+    plist->next = next;
+    //next的上一个节点为新节点
+    next->prev = newnode;
+
+}
+
+void ListPopFront(ListNode* plist)
+{
+    assert(plist);//防止传入空指针
+    assert(plist->next != plist);//防止哨兵节点被删除
+
+    ListNode* next = plist->next;//记录头结点的下一个节点next
+    ListNode* Nextnext = plist->next->next;//记录next的下一个节点Nextnext
+
+    //将next释放并将其置空
+    free(next);
+    next = NULL;
+
+    //头结点与Nextnext节点创建新的双向链接关系
+    plist->next = Nextnext;
+    Nextnext->prev = plist;
+   
+}
+
+ListNode* ListFind(ListNode* plist, LTDataType x)
+{
+    ListNode* cur = plist->next;
+    while (cur != plist)
+    {
+        if (cur->data == x)
+        {
+            return cur;
+        }
+        cur = cur->next;
+    }
+
+}
+
+void ListInsert(ListNode* pos, LTDataType x)
+{
+    ListNode* prev = pos->prev;//记录pos位置的上一个节点prev
+
+    //创建新节点newnode并赋值
+    ListNode* newnode = (ListNode*)malloc(sizeof(ListNode));
+    newnode->data = x;
+
+    //将prev、newnode、pos三个节点双向连接起来
+    prev->next = newnode;
+    newnode->next = pos;
+    pos->prev = newnode;
+    newnode->prev = prev;
+    
+}
+void ListErase(ListNode* pos)
+{
+    //记录pos位置的上下节点prev、next
+    ListNode* prev = pos->prev;
+    ListNode* next = pos->next;
+
+    //释放掉pos节点并置空
+    free(pos);
+    pos = NULL;
+
+    //将next和prev双向连接
+    prev->next = next;
+    next->prev = prev;
+
+}
+
+void ListPushBack(ListNode* plist, LTDataType x)
+{
+    assert(plist);
+
+    ListInsert(plist, x);
+}
+void ListPushFront(ListNode* plist, LTDataType x)
+{
+    assert(plist);
+
+    ListInsert(plist->next, x);
+}
+
+void ListPopFront(ListNode* plist)
+{
+    assert(plist);//防止传入空指针
+    assert(plist->next != plist);//防止哨兵节点被删除
+
+    ListErase(plist->next);
+
+}
+void ListPopBack(ListNode* plist)
+{
+    assert(plist);//防止传入空指针
+    assert(plist->next != plist);//防止哨兵节点被删除
+
+    
+    ListErase(plist->prev);//删除尾结点，即尾删
+}
