@@ -1,0 +1,166 @@
+typedef struct Queuenode
+{
+    int data;
+    struct Queuenode* next;
+}Qnode;
+typedef struct Queue
+{
+    Qnode* head;
+    Qnode* tail;
+}Queue;
+void initQueue(Queue* q)
+{
+    q->head = NULL;
+    q->tail = NULL;
+}
+typedef struct {
+    Queue Q1;
+    Queue Q2;
+} MyStack;
+int Queueempty(Queue* q)
+{
+    if (q->head == NULL)
+        return 0;
+    else
+        return 1;
+
+}
+void pushQueue(Queue* q, int x)
+{
+    assert(q);
+    Qnode* newnode = (Qnode*)malloc(sizeof(Qnode));
+    newnode->data = x;
+    newnode->next = NULL;
+
+    if (q->head == NULL)
+    {
+        q->head = q->tail = newnode;
+    }
+    else
+    {
+        q->tail->next = newnode;
+        q->tail = newnode;
+    }
+}
+void popQueue(Queue* q)
+{
+    assert(q);
+    assert(q->head);
+    Qnode* next = q->head->next;
+    free(q->head);
+    q->head = next;
+
+}
+int Queueback(Queue* q)
+{
+    assert(q);
+    assert(q->head != NULL);
+    return q->tail->data;
+
+}
+int Queuetop(Queue* q)
+{
+    assert(q);
+    assert(q->head);
+    return q->head->data;
+}
+int Queuesize(Queue* q)
+{
+    Qnode* cur = q->head;
+    int count = 0;
+    while (cur)
+    {
+        count++;
+        cur = cur->next;
+    }
+    return count;
+}
+void Queuedestory(Queue* q)
+{
+    if (q->head == NULL)
+    {
+        return 0;
+    }
+    Qnode* next = q->head->next;
+    while (next)
+    {
+        free(q->head);
+        q->head = next;
+        next = next->next;
+    }
+    free(q->head);
+    q->head = q->tail = NULL;
+
+}
+MyStack* myStackCreate()
+{
+    MyStack* st = (MyStack*)malloc(sizeof(MyStack));
+    initQueue(&st->Q1);
+    initQueue(&st->Q2);
+    return st;
+}
+void myStackPush(MyStack* obj, int x) {
+    if (Queueempty(&obj->Q2) == 0)
+    {
+        pushQueue(&obj->Q1, x);
+    }
+    else
+    {
+        pushQueue(&obj->Q2, x);
+    }
+}
+
+int myStackPop(MyStack* obj) {
+    if (Queueempty(&obj->Q1) != 0)
+    {
+        while (Queuesize(&obj->Q1) > 1)
+        {
+            pushQueue(&obj->Q2, Queuetop(&obj->Q1));
+            popQueue(&obj->Q1);
+        }
+        int ret = Queuetop(&obj->Q1);
+        popQueue(&obj->Q1);
+        return ret;
+    }
+    else
+    {
+        while (Queuesize(&obj->Q2) > 1)
+        {
+            pushQueue(&obj->Q1, Queuetop(&obj->Q2));
+            popQueue(&obj->Q2);
+        }
+        int ret = Queuetop(&obj->Q2);
+        popQueue(&obj->Q2);
+        return ret;
+    }
+
+}
+
+int myStackTop(MyStack* obj) {
+    if (Queueempty(&obj->Q1) == 1)
+    {
+        return Queueback(&obj->Q1);
+    }
+    else
+    {
+        return Queueback(&obj->Q2);
+    }
+
+}
+bool myStackEmpty(MyStack* obj) {
+
+    if (Queueempty(&obj->Q1) == 0 && Queueempty(&obj->Q2) == 0)
+        return true;
+    else
+        return false;
+
+}
+
+void myStackFree(MyStack* obj) {
+    Queuedestory(&obj->Q1);
+    Queuedestory(&obj->Q2);
+
+    free(obj);
+    obj = NULL;
+
+}
