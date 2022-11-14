@@ -1,0 +1,114 @@
+typedef struct duilie
+{
+	int* date;
+	int capcity;
+	int top;
+}dl;
+void init(dl** d)
+{
+	(*d)->capcity = 10;
+	(*d)->top = 0;
+	(*d)->date = (dl*)malloc(10 * sizeof(int));
+
+}
+void addduilie(dl* d,int x)
+{
+	if (d->top == d->capcity)
+	{
+		d->date = (dl*)realloc(d->date, (2 * d->capcity) * sizeof(int));
+	}
+	d->date[d->top] = x;
+	d->top++;
+
+}
+int main()
+{
+	dl* d = (dl*)malloc(sizeof(dl));
+	init(&d);
+	addduilie(d,1);
+	addduilie(d, 2);
+	addduilie(d, 3);
+	addduilie(d, 4);
+	addduilie(d, 5);
+
+	delduilie(d);
+	destoryduilie(d);
+
+
+	return 0;
+}
+
+
+
+
+
+
+struct stack
+{
+	char* data;
+	char capacity;
+	char top;
+};
+void initstack(struct stack* s)
+{
+	s->capacity = 0;
+	s->data = NULL;
+	s->top = 0;
+}
+void pushstack(struct stack* s,char x)
+{
+	assert(s);
+	
+	if (s->top == s->capacity)
+	{
+		int newcapacity = s->capacity == 0 ? 10 : 2 * s->capacity;
+		char* ret = realloc(s->data, newcapacity * sizeof(char));
+		if (ret == NULL)
+		{
+			printf("%s", strerror(errno));
+			exit(-1);
+		}
+		s->data = ret;
+		s->capacity = newcapacity;
+	}
+	
+	
+        s->data[s->top] = x;
+		s->top++;
+	
+}
+void destorystack(struct stack* st)
+{
+	assert(st);
+	free(st->data);
+	st->capacity = 0;
+	st->top = 0;
+}
+void popstack(struct stack* st)
+{
+	assert(st);
+	assert(st->top > 0);
+	st->top--;
+
+}
+char topstack(struct stack* st)
+{
+	assert(st);
+	return st->data[st->top];
+}
+
+int main()
+{
+	struct stack st;
+	initstack(&st);
+	pushstack(&st, 1);
+	pushstack(&st, 2);
+	pushstack(&st, 3);
+	pushstack(&st, 4);
+	pushstack(&st, 5);
+	/*destorystack(&st);
+	popstack(&st);
+	char top=topstack(&st);
+	stackisempty(&st);*/
+	return 0;
+}
