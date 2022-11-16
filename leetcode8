@@ -1,0 +1,138 @@
+typedef struct ListNode {
+    int val;
+    struct ListNode* next;
+}ListNode;
+ListNode* ListCreat(int* a, int n)
+{
+
+    ListNode* newList = (ListNode*)malloc(sizeof(ListNode));
+    ListNode* tail = newList;
+    for (int i = 0; i < n; i++)
+    {
+        ListNode* newnode = (ListNode*)malloc(sizeof(ListNode));
+        newnode->val = a[i];
+        newnode->next = NULL;
+
+        tail->next = newnode;
+        tail = newnode;
+
+    }
+    return newList->next;
+
+}
+
+
+////////                               调试代码：想一下这个题能不能用递归实现，并想清楚两个节点交换和一个一个节点交换的根本区别
+struct ListNode* swapPairs(struct ListNode* head) {
+    if (head == NULL)//    第一种特殊情况：head==NULL，直接返回空
+    {
+        return NULL;        
+    }
+    struct ListNode* prev = head;
+    struct ListNode* cur = head->next;
+    struct ListNode* newhead = head->next;
+
+
+    if (cur == NULL)//第二种特殊情况：只有一个节点，直接返回该节点
+    {
+        return head;
+    }
+
+    while (cur)//其实cur永远不会为空，因为cur的值除了第一次本来就存在且为第二个节点的值以外，之后都是Next的值
+               //而Next的值不存在时，会直接进行单独处理，返回交换好的链表。
+    {
+
+        struct ListNode* next = cur->next;
+        if (next == NULL)     //第三种特殊情况：当next不存在时，Next也不存在，那么此时只需要交换cur和prev两个节点，
+                              //并让prev的next指向空即可
+        {
+            cur->next = prev;
+            prev->next = NULL;
+            break;
+        }
+
+        struct ListNode* Next = next->next;
+        if (next && Next == NULL)    //第四种特殊情况：当next存在，而Next不存在时，即Next是最后一个节点，那么交换prev，
+                                     //让prev的next指向next即可
+        {
+            cur->next = prev;
+            prev->next = next;
+            //next->next = NULL;//这一步没有必要，next的next就是NULL
+            break;
+        }
+
+
+        //当next和Next都存在的时候，交换cur和prev，再让cur和prev分别指向Next和next，交换后面两个节点，重复该该过程即可
+        //但要注意，即使是交换，但前面两个节点和后面两个节点仍然要连接起来，即第一个节点应该与第四个节点相连。
+        cur->next = prev;
+        prev->next = Next;
+
+        cur = Next;
+        prev = next;
+
+
+    }
+
+    return newhead;
+
+
+}
+////////                                       正确答案
+
+struct ListNode* swapPairs(struct ListNode* head) {
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    struct ListNode* prev = head;
+    struct ListNode* cur = head->next;
+    struct ListNode* newhead = head->next;
+    if (cur == NULL)
+    {
+        return head;
+    }
+
+    while (cur)
+    {
+
+
+        struct ListNode* next = cur->next;
+        if (next == NULL)
+        {
+            cur->next = prev;
+            prev->next = NULL;
+            break;
+        }
+
+        struct ListNode* Next = next->next;
+        if (next && Next == NULL)
+        {
+            cur->next = prev;
+            prev->next = next;
+            next->next = NULL;
+            break;
+        }
+        cur->next = prev;
+        prev->next = Next;
+
+        cur = Next;
+        prev = next;
+
+
+    }
+
+    return newhead;
+
+
+}
+
+
+int main()
+{
+
+    int arr[] = { 1,2,3,4 };
+    ListNode* newlist=ListCreat(arr,4);
+    ListNode* newhead=swapPairs(newlist);
+
+    return 0;
+}
