@@ -1,0 +1,110 @@
+typedef struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+}TreeNode;
+ void _preorderTraversal(struct TreeNode* root, int* pi, int* a)
+ {
+     if (root == NULL)
+     {
+         return;
+     }
+
+     a[*(pi)] = root->val;
+     (*pi)++;
+
+     _preorderTraversal(root->left, pi, a);
+     _preorderTraversal(root->right, pi, a);
+
+
+ }
+ int TreeSize(struct TreeNode* root)
+ {
+     if (root == NULL)
+     {
+         return;
+     }
+
+     return TreeSize(root->left) + TreeSize(root->right) + 1;
+ }
+ int* preorderTraversal(struct TreeNode* root, int* returnSize) {
+
+     //当root为NULL的时候，因为该函数的返回类型是int*，那就不能返回NULL，应该返回动态开辟的数组，
+     //并且要注意，returnsize也要为0，不然也会报错
+
+     int size = TreeSize(root);
+     int* arr = (int*)malloc(size * sizeof(int));
+
+     int i = 0;
+     _preorderTraversal(root, &i, arr);
+
+     *returnSize = i;
+
+     return arr;
+
+ }
+
+
+ ///////                                        正确答案                        
+ void _preorderTraversal(struct TreeNode* root, int* pi, int* a)
+ {
+     if (root == NULL)
+     {
+         return;
+     }
+
+     a[*(pi)] = root->val;
+     (*pi)++;
+
+     _preorderTraversal(root->left, pi, a);
+     _preorderTraversal(root->right, pi, a);
+
+
+ }
+ int TreeSize(struct TreeNode* root)
+ {
+     if (root == NULL)
+     {
+         return 0;
+     }
+
+     return TreeSize(root->left) + TreeSize(root->right) + 1;
+ }
+ int* preorderTraversal(struct TreeNode* root, int* returnSize) {
+     int size = TreeSize(root);
+     int* arr = (int*)malloc(size * sizeof(int));
+
+     int i = 0;
+     _preorderTraversal(root, &i, arr);
+
+     *returnSize = i;
+
+     return arr;
+
+ }
+
+int main()
+{
+    TreeNode* t1 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* t2 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* t3 = (TreeNode*)malloc(sizeof(TreeNode));
+    TreeNode* t4 = (TreeNode*)malloc(sizeof(TreeNode));
+
+    t1->val = 1;
+    t1->left = NULL;
+    t1->right = t2;
+
+    t2->val = 2;
+    t2->left = t3;
+    t2->right = NULL;
+
+    t3->val = 3;
+    t3->left = NULL;
+    t3->right = NULL;
+
+    int returnSize = 0;
+
+    preorderTraversal(NULL, &returnSize);
+    
+    return 0;
+}
