@@ -1,0 +1,46 @@
+int** levelOrder(struct TreeNode* root) {
+	int** arr = (int**)malloc(100 * sizeof(int*));
+
+	for (int i = 0; i < 100; i++)
+	{
+		arr[i] = (int*)malloc(100 * sizeof(int));
+	}
+
+	Queue q;
+	InitQueue(&q);
+
+	if (root)
+		PushQueue(&q, root);
+	int j = 0;
+	int k = 0;
+	while (!QueueEmpty(&q))
+	{
+		int size = QueueSize(&q);
+
+		while (size--)
+		{
+			QDataType cur = QueueFront(&q);
+
+			arr[j][k++] = cur->val;
+
+			PopQueue(&q);
+
+			if (cur->left)
+			PushQueue(&q, cur->left);
+
+			if (cur->right)
+			PushQueue(&q, cur->right);
+
+		}
+		j++;
+		k = 0;
+
+	}
+
+
+
+	return arr;
+
+
+
+}
