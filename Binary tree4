@@ -1,0 +1,68 @@
+typedef struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+
+}TreeNode;
+
+//struct TreeNode* invertTree(struct TreeNode* root) {
+//    if (root == NULL)
+//        return NULL;
+//
+//    struct TreeNode* left = root->left;
+//    struct TreeNode* right = root->right;
+//
+//    root->left = right;
+//    root->right = left; 
+//
+//    invertTree(root->left);
+//    invertTree(root->right);
+//
+//    return root;
+//
+//
+//}
+
+bool isSameTree(struct TreeNode* root1, struct TreeNode* root2)
+{
+    if (root1 == NULL && root2 == NULL)
+        return true;
+
+    if (root1 != NULL && root2 == NULL)
+        return false;
+
+    if (root1 == NULL && root2 != NULL)
+        return false;
+
+    if (root1->val != root2->val)
+        return false;
+
+    return isSameTree(root1->left, root2->left) && isSameTree(root1->right, root2->right);
+
+
+}
+
+bool isSymmetric(struct TreeNode* root) {
+    if (root == NULL)
+        return true;
+
+
+    struct TreeNode* root1 = root->left;
+    struct TreeNode* root2 = root->right;
+
+    if (root1 == NULL && root2 == NULL)
+        return true;
+
+    if (root1 != NULL && root2 == NULL)
+        return false;
+
+    if (root1 == NULL && root2 != NULL)
+        return false;
+
+    if (root1->val != root2->val)
+        return false;
+
+    return isSameTree(root1->left, root2->right) && isSameTree(root1->right, root2->left);
+
+
+}
