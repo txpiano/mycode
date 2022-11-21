@@ -1,0 +1,50 @@
+////////                                   116.填充每个节点的右兄弟指针
+//						思路：还是用队列层序遍历，用一个cur指针去遍历每一个节点，cur的起始位置是每一层的第一个节点，
+//						那么cur的next指针应该指向右兄弟，那么此时Pop一次，拿到下一个节点，使得cur的next指向下一个节点，
+//						如果此时的size=1，就说明当前节点是最后一个节点，要使最后一个节点的next指向空，再pop掉该节点。
+// 					
+//struct Node* connect(struct Node* root) {
+//
+//	Queue q;
+//	InitQueue(&q);
+//
+//	if (root != NULL)
+//		PushQueue(&q, root);
+//
+//	while (!QueueEmpty(&q))
+//	{
+//		int size = QueueSize(&q);
+// 
+//		//            BUG：如果按照之前的写法：size——，那么第一次size=1，--后等于0，会直接走else，而else中pop掉之后会取队头
+//					  但此时的队列已经空了，故报错，所以应该直接写size，在循环的最后再减去1
+//		while (size)
+//		{	
+//			QDataType cur = QueueFront(&q);
+//			if (size == 1)
+//			{
+//				cur->next = NULL;
+//				PopQueue(&q);
+//			}
+//			else
+//			{
+//				PopQueue(&q);
+//				QDataType next = QueueFront(&q);
+//
+//				cur->next = next;
+//			}
+//
+//
+//			if (cur->left)
+//				PushQueue(&q, cur->left);
+//
+//			if (cur->right)
+//				PushQueue(&q, cur->right);
+//
+//			size--;
+//		}
+//
+//
+//	}
+//
+//
+//	return root;
