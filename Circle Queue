@@ -1,0 +1,188 @@
+///////                                       调试代码
+typedef struct {
+    int front;
+    int rear;
+    int* a;
+    int size;//因为要用到数组长度，但函数中又没传，只有定义在结构体中
+
+} MyCircularQueue;
+
+
+MyCircularQueue* myCircularQueueCreate(int k) {
+    MyCircularQueue* cq = (MyCircularQueue*)malloc(sizeof(MyCircularQueue));
+
+    cq->front = 0;
+    cq->rear = 0;
+    cq->a = (int*)malloc((k+1) * sizeof(int));//题目所谓的队列长度为k，指的是可以存储k个有效数据的队列，数组的大小要加1
+    cq->size = k+1;//数组的长度
+
+    return cq;
+}
+
+bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
+    if ((obj->rear + 1) % (obj->size) == obj->front)
+        return false;
+    else
+    {
+        obj->a[obj->rear] = value;
+        obj->rear = (obj->rear + 1) % (obj->size);
+        return true;
+    }
+
+}
+
+bool myCircularQueueDeQueue(MyCircularQueue* obj) {
+    if ((obj->front == obj->rear))
+        return false;
+    else
+        obj->front = (obj->front + 1) % (obj->size);
+
+    return true;
+
+}
+
+int myCircularQueueFront(MyCircularQueue* obj) {
+
+    //题目还要求了空队列返回-1
+    return obj->a[obj->front];
+
+}
+
+int myCircularQueueRear(MyCircularQueue* obj) {
+
+    //题目要求空队列返回-1
+    return obj->a[(obj->rear - 1 + (obj->size)) % (obj->size)];
+}
+
+bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
+    if (obj->front == obj->rear)
+        return true;
+    else
+        return false;
+}
+
+bool myCircularQueueIsFull(MyCircularQueue* obj) {
+    if ((obj->rear + 1) % (obj->size) == obj->front)
+        return true;
+    else
+        return false;
+}
+
+void myCircularQueueFree(MyCircularQueue* obj) {
+
+    free(obj->a);
+    obj->a = NULL;
+
+    free(obj);
+    obj = NULL;
+}
+
+
+
+
+
+
+/////                                  正确答案：622.设计循环队列
+typedef struct {
+    int front;
+    int rear;
+    int* a;
+    int size;
+
+} MyCircularQueue;
+
+
+MyCircularQueue* myCircularQueueCreate(int k) {
+    MyCircularQueue* cq = (MyCircularQueue*)malloc(sizeof(MyCircularQueue));
+
+    cq->front = 0;
+    cq->rear = 0;
+    cq->a = (int*)malloc((k + 1) * sizeof(int));
+    cq->size = k + 1;
+
+    return cq;
+}
+
+bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
+    if ((obj->rear + 1) % (obj->size) == obj->front)
+        return false;
+    else
+    {
+        obj->a[obj->rear] = value;
+        obj->rear = (obj->rear + 1) % (obj->size);
+        return true;
+    }
+
+}
+
+bool myCircularQueueDeQueue(MyCircularQueue* obj) {
+    if ((obj->front == obj->rear))
+        return false;
+    else
+        obj->front = (obj->front + 1) % (obj->size);
+
+    return true;
+
+}
+
+int myCircularQueueFront(MyCircularQueue* obj) {
+    if (obj->front == obj->rear)
+        return -1;
+    else
+        return obj->a[obj->front];
+
+}
+
+int myCircularQueueRear(MyCircularQueue* obj) {
+    if (obj->rear == obj->front)
+        return -1;
+    else
+        return obj->a[(obj->rear - 1 + (obj->size)) % (obj->size)];
+}
+
+bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
+    if (obj->front == obj->rear)
+        return true;
+    else
+        return false;
+}
+
+bool myCircularQueueIsFull(MyCircularQueue* obj) {
+    if ((obj->rear + 1) % (obj->size) == obj->front)
+        return true;
+    else
+        return false;
+}
+
+void myCircularQueueFree(MyCircularQueue* obj) {
+
+    free(obj->a);
+    obj->a = NULL;
+
+    free(obj);
+    obj = NULL;
+}
+
+int main()
+{
+    MyCircularQueue* cq = myCircularQueueCreate(3);
+    myCircularQueueEnQueue(cq,1);
+    myCircularQueueEnQueue(cq,2);
+    myCircularQueueEnQueue(cq,3);
+    myCircularQueueEnQueue(cq,4);
+
+    int a=myCircularQueueRear(cq);
+
+    bool b=myCircularQueueIsFull(cq);
+
+    
+    bool c=myCircularQueueDeQueue(cq);
+
+    bool d=myCircularQueueEnQueue(cq,4);
+
+    myCircularQueueRear(cq);
+
+    
+    
+    return 0;
+}
