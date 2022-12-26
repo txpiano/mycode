@@ -1,0 +1,328 @@
+typedef char BTDataType;
+
+typedef struct BinaryTreeNode
+{
+	BTDataType data;
+	struct BinaryTreeNode* left;
+	struct BinaryTreeNode* right;
+}BTNode;
+typedef BTNode* QDataType;
+
+typedef struct QueueNode
+{
+	QDataType data;
+	struct QueueNode* next;
+}QNode;
+
+
+typedef struct Queue
+{
+	struct QueueNode* head;
+	struct QueueNode* tail;
+	int size;
+}Queue;
+
+void InitQueue(Queue* q)
+{
+	q->head = NULL;
+	q->tail = NULL;
+	q->size = 0;
+}
+void PushQueue(Queue* q, QDataType x)
+{
+	//开辟新节点
+	QNode* newnode = (QNode*)malloc(sizeof(QNode));
+	newnode->data = x;
+	newnode->next = NULL;
+
+	//第一次进队列
+	if (q->head == NULL)
+	{
+		q->head = newnode;
+		q->tail = newnode;
+		q->size++;
+	}
+
+	//在尾上插入，并把尾指针赋给新节点
+	else
+	{
+		q->tail->next = newnode;
+		q->tail = newnode;
+		q->size++;
+	}
+}
+
+void PopQueue(Queue* q)
+{
+	assert(q);
+	assert(q->head != NULL);
+
+	QNode* next = q->head->next;
+
+	free(q->head);
+	q->head = next;
+	if (q->head == NULL)
+	{
+		q->tail = NULL;
+	}
+	q->size--;
+}
+
+QDataType QueueFront(Queue* q)
+{
+	assert(q);
+	assert(q->size > 0);
+
+	return q->head->data;
+}
+
+QDataType QueueBack(Queue* q)
+{
+	assert(q);
+	assert(q->size > 0);
+
+	return q->tail->data;
+
+}
+
+int QueueSize(Queue* q)
+{
+	assert(q);
+
+	return q->size;
+}
+
+int QueueEmpty(Queue* q)
+{
+	assert(q);
+
+	return QueueSize(q) == 0;
+}
+
+void DestroyQueue(Queue* q)
+{
+	assert(q);
+	assert(!QueueEmpty(q));
+
+	QNode* del = q->head;
+
+	while (del)
+	{
+		q->head = q->head->next;
+
+		free(del);
+		del = q->head;
+	}
+
+	q->head = NULL;
+	q->tail = NULL;
+	q->size = 0;
+
+}
+
+
+
+
+
+
+BTNode* BinaryTreeCreate(BTDataType* a, int n, int* pi)
+{
+	
+	if (a[*pi] == '#')
+	{
+		(*pi)++;
+		return NULL;
+	}
+
+
+
+	BTNode* newnode = (BTNode*)malloc(sizeof(BTNode));
+
+	newnode->data = a[*pi];
+	(*pi)++;
+
+	newnode->left = BinaryTreeCreate(a, n, pi);
+	newnode->right = BinaryTreeCreate(a, n, pi);
+
+	return newnode;
+
+}
+
+void BinaryTreeDestory(BTNode** root)
+{
+	if ((*root) == NULL)
+		return;
+
+	BinaryTreeDestory(&(*root)->left);
+	BinaryTreeDestory(&(*root)->right);
+	
+	free(*root);
+	(*root) = NULL;
+
+
+}
+int BinaryTreeSize(BTNode* root)
+{
+	if (root == NULL)
+		return 0;
+
+	return BinaryTreeSize(root->left) + BinaryTreeSize(root->right) + 1;
+
+}
+int BinaryTreeLevelKSize(BTNode* root, int k)
+{
+	if (root == NULL)
+		return 0;
+
+	if (k == 1)
+		return 1;
+
+	return BinaryTreeLevelKSize(root->left, k - 1) + BinaryTreeLevelKSize(root->right, k - 1);
+
+
+}
+
+BTNode* BinaryTreeFind(BTNode* root, BTDataType x)
+{
+	if (root == NULL)
+		return NULL;
+	
+	if (root->data == x)
+		return root;
+
+	BTNode* left=BinaryTreeFind(root->left, x);
+	if (left != NULL)
+		return left;
+
+	BTNode* right=BinaryTreeFind(root->right, x);
+	if (right != NULL)
+		return right;
+
+	
+}
+
+void BinaryTreePrevOrder(BTNode* root)
+{
+	if (root == NULL)
+		return;
+	printf("%c", root->data);
+	BinaryTreePrevOrder(root->left);
+	BinaryTreePrevOrder(root->right);
+
+}
+
+void BinaryTreeInOrder(BTNode* root)
+{
+
+	if (root == NULL)
+		return;
+
+	BinaryTreePrevOrder(root->left);
+	printf("%c", root->data);
+	BinaryTreePrevOrder(root->right);
+
+}
+void BinaryTreePostOrder(BTNode* root)
+{
+
+	if (root == NULL)
+		return;
+
+	BinaryTreePrevOrder(root->left);
+	BinaryTreePrevOrder(root->right);
+	printf("%c", root->data);
+
+
+}
+
+void BinaryTreeLevelOrder(BTNode* root)
+{
+	Queue q;
+	InitQueue(&q);
+
+	PushQueue(&q,root);
+
+	while (!QueueEmpty(&q))
+	{
+		BTNode* cur = QueueFront(&q);
+		printf("%c", cur->data);
+
+		PopQueue(&q);
+
+		if(cur->left)
+		PushQueue(&q,cur->left);
+
+		if(cur->right)
+		PushQueue(&q,cur->right);
+
+	}
+
+
+
+}
+
+int BinaryTreeComplete(BTNode* root)
+{
+	Queue q;
+	InitQueue(&q);
+
+	PushQueue(&q, root);
+
+	while (!QueueEmpty(&q))
+	{
+
+		BTNode* cur = QueueFront(&q);
+		if (cur == NULL)
+			break;
+
+		PopQueue(&q);
+
+		if (cur != NULL)
+		{
+			PushQueue(&q, cur->left);
+			PushQueue(&q, cur->right);
+		}
+		
+
+	}
+
+	while (!QueueEmpty(&q))
+	{
+		
+
+		BTNode* cur1 = QueueFront(&q);
+
+		if (cur1 != NULL)
+			return 0;
+
+		PopQueue(&q);
+
+	}
+
+	return 1;
+	
+
+}
+
+
+int main()
+{
+
+	char arr[] = "ABD##E#H##CF##G##";
+	int size = sizeof(arr) / sizeof(arr[0]);
+	int i = 0;
+
+	BTNode* tree=BinaryTreeCreate(arr, size, &i);
+	//BinaryTreeDestory(&tree);
+	int Treesize=BinaryTreeSize(tree);
+	int Treelevelsize = BinaryTreeLevelKSize(tree, 4);
+	/*BTNode* TreeNode=BinaryTreeFind(tree, 'G');
+	BinaryTreePrevOrder(tree);
+	BinaryTreeInOrder(tree);*/
+
+	BinaryTreeLevelOrder(tree);
+	int FT = BinaryTreeComplete(tree);
+	
+
+	return 0;
+}
