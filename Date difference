@@ -1,0 +1,79 @@
+#include <iostream>
+using namespace std;
+
+
+bool IsLeapYear(int year)
+{
+    if((year%4==0 && year%100!=0)||year%400==0)
+    return true;
+    else
+     return false;
+
+}
+int ToYearBeginDay(int year,int month,int day)
+{
+
+     int MonthDay[]={0,31,59,90,120,151,181,212,243,273,304,334,365};
+
+    
+    if(((year%4==0 && year%100!=0) || year%400==0) && month > 2)
+    return MonthDay[month-1]+day+1;
+
+    else
+    return MonthDay[month-1]+day;
+}
+int main() {
+    
+     int year1, month1, day1;
+    int year2, month2, day2;
+
+    while (scanf("%04d%02d%02d\n%04d%02d%02d", &year1, &month1, &day1, &year2, &month2, &day2) != EOF)
+    {
+        
+
+        int minyear=year1;
+        int minmonth=month1;
+        int minday=day1;
+
+        int maxyear=year2;
+        int maxmonth=month2;
+        int maxday=day2;
+
+
+        if(year1>year2||(year1==year2&&month1>month2)||(year1==year2 && month1==month2 && day1>day2))
+        {
+            swap(minyear,maxyear);
+            swap(minmonth,maxmonth);
+            swap(minday,maxday);
+        }
+
+        int Maxday=ToYearBeginDay(maxyear, maxmonth, maxday);
+        int Minday=ToYearBeginDay(minyear, minmonth, minday);
+
+        int yeargap=maxyear-minyear;
+        int daygap=365*yeargap+Maxday-Minday+1;
+        int startyear=minyear+1;
+
+        for(int i=0;i<yeargap-1;i++)
+        {
+            if(IsLeapYear(startyear))
+            {
+                daygap++;
+            }
+            startyear++;
+            
+        }
+
+        
+        cout<<daygap;
+
+
+
+        
+        
+
+    }
+
+
+    
+}
